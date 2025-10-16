@@ -8,7 +8,7 @@ import SchoolSelection from "./pages/SchoolSelection";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
-import FindRoom from "./pages/FindRoom";
+import Profile from "./pages/Profile";
 import ConfirmBooking from "./pages/ConfirmBooking";
 import NotFound from "./pages/NotFound";
 
@@ -26,7 +26,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/find-room" element={<FindRoom />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/confirm-booking/:roomId" element={<ConfirmBooking />} />
           <Route path="/booking/:bookingId" element={<ConfirmBooking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
