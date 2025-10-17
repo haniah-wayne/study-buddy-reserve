@@ -1,15 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Building, Calendar, ChevronLeft, Clock, MapPin, Users } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Building, Calendar, ChevronLeft, Clock, Users, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -26,7 +19,6 @@ const ConfirmBooking = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const { toast } = useToast();
-  const [bookingFor, setBookingFor] = useState("");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   // Mock data - will be replaced with real data from backend
@@ -35,19 +27,12 @@ const ConfirmBooking = () => {
     name: "Study Room 1104",
     building: "Undergraduate Library",
     capacity: 4,
-    timeSlot: "10:00am - 12:00pm",
+    timeSlot: "10:00 AM - 12:00 PM",
     date: "September 16, 2025",
-    duration: "2 hours",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop",
   };
 
   const handleReserve = () => {
-    if (!bookingFor) {
-      toast({
-        title: "Please select who you're booking for",
-        variant: "destructive",
-      });
-      return;
-    }
     setShowConfirmDialog(true);
   };
 
@@ -63,96 +48,112 @@ const ConfirmBooking = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-gradient-primary shadow-soft sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="bg-background border-b sticky top-0 z-10">
+        <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/find-room")}
-              className="text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => navigate("/dashboard")}
+              className="hover:bg-accent"
             >
               <ChevronLeft className="h-6 w-6" />
             </Button>
-            <h1 className="text-2xl font-bold text-primary-foreground">Confirm Booking</h1>
+            <h1 className="text-xl font-semibold">Confirm Booking</h1>
           </div>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-fade-in">
-        {/* Room Details */}
-        <Card className="shadow-large">
-          <CardHeader>
-            <CardTitle className="text-2xl">{room.name}</CardTitle>
-            <CardDescription className="flex items-center gap-2 text-base">
-              <Building className="h-5 w-5" />
-              {room.building}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-3 p-4 bg-accent rounded-lg">
-                <Calendar className="h-5 w-5 text-accent-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Date</p>
-                  <p className="font-medium">{room.date}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4 bg-accent rounded-lg">
-                <Clock className="h-5 w-5 text-accent-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Time Slot</p>
-                  <p className="font-medium">{room.timeSlot}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4 bg-accent rounded-lg">
-                <Users className="h-5 w-5 text-accent-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Capacity</p>
-                  <p className="font-medium">{room.capacity} people</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4 bg-accent rounded-lg">
-                <MapPin className="h-5 w-5 text-accent-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Duration</p>
-                  <p className="font-medium">{room.duration}</p>
-                </div>
+      <main className="max-w-3xl mx-auto px-4 py-6 space-y-6 animate-fade-in">
+        {/* Room Card with Image */}
+        <Card className="overflow-hidden">
+          <CardContent className="p-4">
+            <div className="flex gap-4">
+              <img
+                src={room.image}
+                alt={room.name}
+                className="w-24 h-24 rounded-lg object-cover"
+              />
+              <div className="flex flex-col justify-center">
+                <h2 className="text-lg font-semibold">{room.name}</h2>
+                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                  <Building className="h-4 w-4" />
+                  {room.building}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Booking Options */}
-        <Card className="shadow-medium">
-          <CardHeader>
-            <CardTitle>Booking Details</CardTitle>
-            <CardDescription>Select who you're booking for</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Select value={bookingFor} onValueChange={setBookingFor}>
-              <SelectTrigger className="h-12">
-                <SelectValue placeholder="Select booking type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="individual">Individual (Just Me)</SelectItem>
-                <SelectItem value="group" disabled>
-                  Group (Coming Soon)
-                </SelectItem>
-              </SelectContent>
-            </Select>
+        {/* Booking Details */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Booking Details
+          </h3>
 
-            <div className="mt-6 p-4 bg-accent/50 rounded-lg">
-              <p className="text-sm text-muted-foreground">
-                <strong>Note:</strong> Maximum booking duration is 2 hours per day. Please arrive on
-                time and notify us if you need to cancel.
+          <div className="space-y-3">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                    <Calendar className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Date</p>
+                    <p className="font-medium">{room.date}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                    <Clock className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Time Slot</p>
+                    <p className="font-medium">{room.timeSlot}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Number of People</p>
+                    <p className="font-medium">{room.timeSlot}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Warning Note */}
+        <Card className="border-amber-500/20 bg-amber-500/10">
+          <CardContent className="p-4">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-900 dark:text-amber-100">
+                <strong>Please Note:</strong> Maximum of 2 active bookings allowed.
               </p>
             </div>
           </CardContent>
         </Card>
 
         {/* Reserve Button */}
-        <Button onClick={handleReserve} size="lg" className="w-full h-14 text-lg shadow-large">
+        <Button 
+          onClick={handleReserve} 
+          size="lg" 
+          className="w-full h-12 text-base bg-[hsl(0,70%,60%)] hover:bg-[hsl(0,70%,55%)] text-white"
+        >
           Reserve Room
         </Button>
       </main>

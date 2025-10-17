@@ -1,215 +1,152 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, Mail, User, Users, Plus, Trash2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { ChevronLeft, Mail, Lock, Moon, Bell, ChevronRight, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [groups, setGroups] = useState([
-    { id: 1, name: "Study Group A", members: 3 },
-    { id: 2, name: "CS Project Team", members: 5 },
-  ]);
-  const [newGroupName, setNewGroupName] = useState("");
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState(true);
 
   // Mock user data
   const user = {
-    firstName: "John",
-    lastName: "Doe",
+    name: "John Doe",
     email: "john.doe@wayne.edu",
   };
 
-  const handleCreateGroup = () => {
-    if (!newGroupName.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a group name",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const newGroup = {
-      id: groups.length + 1,
-      name: newGroupName,
-      members: 1,
-    };
-
-    setGroups([...groups, newGroup]);
-    setNewGroupName("");
-    setShowCreateGroup(false);
-    
+  const handlePasswordChange = () => {
     toast({
-      title: "Success",
-      description: "Group created successfully",
-    });
-  };
-
-  const handleDeleteGroup = (groupId: number) => {
-    setGroups(groups.filter((g) => g.id !== groupId));
-    toast({
-      title: "Success",
-      description: "Group deleted",
+      title: "Password Change",
+      description: "Password change functionality coming soon",
     });
   };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-gradient-primary shadow-soft sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="bg-background border-b sticky top-0 z-10">
+        <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate("/dashboard")}
-              className="text-primary-foreground hover:bg-primary-foreground/10"
+              className="hover:bg-accent"
             >
               <ChevronLeft className="h-6 w-6" />
             </Button>
-            <h1 className="text-2xl font-bold text-primary-foreground">Account Settings</h1>
+            <h1 className="text-xl font-semibold">Settings</h1>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Account Information */}
-        <Card className="shadow-medium">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Account Information
-            </CardTitle>
-            <CardDescription>Your personal details</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  value={user.firstName}
-                  readOnly
-                  className="bg-muted"
-                />
+      <main className="max-w-3xl mx-auto px-4 py-6 space-y-6 animate-fade-in">
+        {/* User Profile Card */}
+        <Card className="overflow-hidden bg-gradient-to-br from-[hsl(0,70%,60%)] to-[hsl(15,85%,65%)] border-0">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/20">
+                <User className="h-8 w-8 text-white" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  value={user.lastName}
-                  readOnly
-                  className="bg-muted"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  value={user.email}
-                  readOnly
-                  className="bg-muted flex-1"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* My Groups */}
-        <Card className="shadow-medium">
-          <CardHeader>
-            <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  My Groups
-                </CardTitle>
-                <CardDescription>Manage your study groups</CardDescription>
+                <h2 className="text-xl font-semibold text-white">{user.name}</h2>
+                <p className="text-sm text-white/90">{user.email}</p>
               </div>
-              <Button
-                onClick={() => setShowCreateGroup(!showCreateGroup)}
-                size="sm"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Group
-              </Button>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Create Group Form */}
-            {showCreateGroup && (
-              <Card className="bg-muted/50">
-                <CardContent className="pt-6 space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="groupName">Group Name</Label>
-                    <Input
-                      id="groupName"
-                      placeholder="Enter group name"
-                      value={newGroupName}
-                      onChange={(e) => setNewGroupName(e.target.value)}
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button onClick={handleCreateGroup} className="flex-1">
-                      Create
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setShowCreateGroup(false);
-                        setNewGroupName("");
-                      }}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Groups List */}
-            {groups.length > 0 ? (
-              <div className="space-y-3">
-                {groups.map((group) => (
-                  <Card key={group.id} className="shadow-soft">
-                    <CardContent className="py-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold">{group.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {group.members} member{group.members !== 1 ? "s" : ""}
-                          </p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteGroup(group.id)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p>No groups yet. Create your first group!</p>
-              </div>
-            )}
           </CardContent>
         </Card>
+
+        {/* Account Section */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Account
+          </h3>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                  <Mail className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Email Address</p>
+                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <button 
+                onClick={handlePasswordChange}
+                className="flex items-center gap-4 w-full text-left"
+              >
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                  <Lock className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Change Password</p>
+                  <p className="text-sm text-muted-foreground">Update your password</p>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Preferences Section */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Preferences
+          </h3>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                    <Moon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Dark Mode</p>
+                    <p className="text-sm text-muted-foreground">Toggle dark appearance</p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={darkMode} 
+                  onCheckedChange={setDarkMode}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent">
+                    <Bell className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Notifications</p>
+                    <p className="text-sm text-muted-foreground">Booking reminders & updates</p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={notifications} 
+                  onCheckedChange={setNotifications}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   );
